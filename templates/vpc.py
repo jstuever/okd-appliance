@@ -1,42 +1,42 @@
 def GenerateConfig(context):
 
     resources = [{
-        'name': context.properties['cluster_name'] + '-network',
+        'name': context.properties['name'] + '-network',
         'type': 'compute.v1.network',
         'properties': {
-            'region': context.properties['cluster_region'],
+            'region': context.properties['region'],
             'autoCreateSubnetworks': False
         }
     }, {
-        'name': context.properties['cluster_name'] + '-subnet',
+        'name': context.properties['name'] + '-subnet',
         'type': 'compute.v1.subnetwork',
         'properties': {
-            'region': context.properties['cluster_region'],
-            'network': '$(ref.' + context.properties['cluster_name'] + '-network.selfLink)',
-            'ipCidrRange': context.properties['cluster_cidr']
+            'region': context.properties['region'],
+            'network': '$(ref.' + context.properties['name'] + '-network.selfLink)',
+            'ipCidrRange': context.properties['cidr']
         }
     }, {
-        'name': context.properties['cluster_name'] + '-router',
+        'name': context.properties['name'] + '-router',
         'type': 'compute.v1.router',
         'properties': {
-            'region': context.properties['cluster_region'],
-            'network': '$(ref.' + context.properties['cluster_name'] + '-network.selfLink)',
+            'region': context.properties['region'],
+            'network': '$(ref.' + context.properties['name'] + '-network.selfLink)',
             'nats': [{
-                'name': context.properties['cluster_name'] + '-nat',
+                'name': context.properties['name'] + '-nat',
                 'natIpAllocateOption': 'AUTO_ONLY',
                 'minPortsPerVm': 7168,
                 'sourceSubnetworkIpRangesToNat': 'LIST_OF_SUBNETWORKS',
                 'subnetworks': [{
-                    'name': '$(ref.' + context.properties['cluster_name'] + '-subnet.selfLink)',
+                    'name': '$(ref.' + context.properties['name'] + '-subnet.selfLink)',
                     'sourceIpRangesToNat': ['ALL_IP_RANGES']
                 }]
             }]
         }
     }, {
-        'name': context.properties['cluster_name'] + '-internal',
+        'name': context.properties['name'] + '-internal',
         'type': 'compute.v1.firewall',
         'properties': {
-            'network': '$(ref.' + context.properties['cluster_name'] + '-network.selfLink)',
+            'network': '$(ref.' + context.properties['name'] + '-network.selfLink)',
             'allowed': [{
                 'IPProtocol': 'icmp'
             },{
@@ -46,7 +46,7 @@ def GenerateConfig(context):
                 'IPProtocol': 'tcp',
                 'ports': ['6443']
             }],
-            'sourceRanges': [context.properties['cluster_cidr']]
+            'sourceRanges': [context.properties['cidr']]
         }
     }]
 

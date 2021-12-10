@@ -17,9 +17,9 @@ resources:
 - name: cluster-vpc
   type: templates/vpc.py
   properties:
-    cluster_name: '${CLUSTER_NAME}'
-    cluster_region: '${CLUSTER_REGION}'
-    cluster_cidr: '${CLUSTER_CIDR}'
+    name: '${CLUSTER_NAME}'
+    region: '${CLUSTER_REGION}'
+    cidr: '${CLUSTER_CIDR}'
 EOF
 
 gcloud deployment-manager deployments create ${CLUSTER_NAME}-vpc --config assets/vpc.yaml
